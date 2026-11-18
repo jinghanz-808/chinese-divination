@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>中式占卜 · 周易起卦 · 抽签 · 今日运势</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Zhi+Mang+Xing&family=Noto+Serif+SC:wght@400;600;900&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#f2e8d5;
+    --paper-deep:#e9dcbf;
+    --card:#f8f1de;
+    --card-edge:#d9c9a3;
+    --ink:#2e2a22;
+    --ink-soft:#6a6151;
+    --ink-faint:#968a72;
+    --cinnabar:#a3271b;
+    --cinnabar-bright:#bc3524;
+    --cinnabar-soft:rgba(163,39,27,.09);
+    --gold:#96762c;
+    --gold-soft:rgba(150,118,44,.14);
+    --brass:#b08a3e;
+    --brass-dark:#7d5f24;
+    --shadow:0 10px 30px rgba(74,58,30,.16);
+    --paper-tex-opacity:.5;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#1b1813;
+      --paper-deep:#14110d;
+      --card:#26211a;
+      --card-edge:#4a4132;
+      --ink:#eadfc6;
+      --ink-soft:#b3a78d;
+      --ink-faint:#7e745f;
+      --cinnabar:#d2604c;
+      --cinnabar-bright:#e0705c;
+      --cinnabar-soft:rgba(210,96,76,.13);
+      --gold:#c2a154;
+      --gold-soft:rgba(194,161,84,.14);
+      --brass:#c49b52;
+      --brass-dark:#96762c;
+      --shadow:0 10px 30px rgba(0,0,0,.5);
+      --paper-tex-opacity:.16;
+    }
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    color:var(--ink);
+    font-family:"Noto Serif SC","Songti SC","STSong",serif;
+    background:
+      radial-gradient(1200px 500px at 50% -120px, var(--gold-soft), transparent 60%),
+      linear-gradient(180deg, var(--paper) 0%, var(--paper-deep) 100%);
+    min-height:100vh;
+    position:relative;
+  }
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    pointer-events:none;
+    opacity:var(--paper-tex-opacity);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.36 0 0 0 0 0.2 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+    z-index:0;
+  }
+  .wrap{ position:relative; z-index:1; max-width:880px; margin:0 auto; padding:0 18px 56px; }
+
+  /* ---------- 顶部 ---------- */
+  .topbar{
+    display:flex; justify-content:flex-end; padding:16px 0 0;
+  }
+  .tarot-btn{
+    display:inline-flex; align-items:center; gap:8px;
+    min-height:44px; padding:9px 20px;
+    color:#f7ecd2; text-decoration:none;
+    font-size:15px; letter-spacing:.14em; font-weight:600;
+    background:linear-gradient(160deg, #8e2318, var(--cinnabar) 55%, #7c1d13);
+    border:1px solid rgba(255,235,200,.35);
+    border-radius:3px;
+    box-shadow:0 4px 14px rgba(120,30,18,.35), inset 0 0 0 3px rgba(0,0,0,.08);
+  }
+  .tarot-btn:active{ transform:translateY(1px); }
+  .tarot-btn .dot{ width:7px; height:7px; border-radius:50%; background:#e9c46a; box-shadow:0 0 6px #e9c46a; }
+
+  header.hero{ text-align:center; padding:26px 0 8px; position:relative; }
+  .seal{
+    position:absolute; top:34px; right:6px;
+    width:52px; height:52px;
+    background:var(--cinnabar);
+    color:#f8ecd4;
+    font-family:"Ma Shan Zheng",serif;
+    font-size:30px; line-height:52px; text-align:center;
+    border-radius:6px;
+    transform:rotate(5deg);
+    box-shadow:0 3px 10px rgba(120,30,18,.35);
+    opacity:.92;
+  }
+  @media (max-width:560px){ .seal{ width:42px; height:42px; font-size:24px; line-height:42px; top:20px; } }
+  .hero h1{
+    margin:0;
+    font-family:"Ma Shan Zheng","Noto Serif SC",serif;
+    font-weight:400;
+    font-size:clamp(52px, 11vw, 84px);
+    letter-spacing:.12em;
+    color:var(--ink);
+  }
+  .hero .sub{
+    margin:10px 0 0;
+    color:var(--ink-soft);
+    font-size:clamp(14px, 3.6vw, 17px);
+    letter-spacing:.5em; text-indent:.5em;
+  }
+  .hero .rule{
+    margin:22px auto 0; max-width:420px; height:14px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .hero .rule::before,.hero .rule::after{
+    content:""; flex:1; height:1px;
+    background:linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .hero .rule span{ width:9px; height:9px; background:var(--cinnabar); transform:rotate(45deg); flex:none; }
+
+  /* ---------- 标签页 ---------- */
+  nav.tabs{
+    display:flex; gap:8px; justify-content:center; flex-wrap:wrap;
+    margin:26px 0 22px;
+  }
+  .tab-btn{
+    min-height:48px; padding:10px 26px;
+    font-family:inherit; font-size:17px; font-weight:600; letter-spacing:.22em; text-indent:.22em;
+    color:var(--ink-soft);
+    background:transparent;
+    border:1px solid var(--card-edge);
+    border-radius:3px;
+    cursor:pointer;
+  }
+  .tab-btn.active{
+    color:#f8ecd4; background:var(--ink); border-color:var(--ink);
+    box-shadow:var(--shadow);
+  }
+  @media (prefers-color-scheme: dark){
+    .tab-btn.active{ color:#1b1813; background:var(--ink); }
+  }
+  .panel{ display:none; }
+  .panel.active{ display:block; animation:fadein .45s ease; }
+  @keyframes fadein{ from{ opacity:0; transform:translateY(6px);} to{ opacity:1; transform:none;} }
+  @media (prefers-reduced-motion: reduce){
+    .panel.active{ animation:none; }
+  }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--card-edge);
+    border-radius:4px;
+    box-shadow:var(--shadow);
+    padding:28px 26px;
+    position:relative;
+  }
+  .card::before{
+    content:""; position:absolute; inset:6px;
+    border:1px solid var(--gold-soft);
+    border-radius:2px; pointer-events:none;
+  }
+  .card h2{
+    margin:0 0 6px; text-align:center;
+    font-family:"Ma Shan Zheng",serif; font-weight:400;
+    font-size:34px; letter-spacing:.18em; color:var(--ink);
+  }
+  .card .hint{ text-align:center; color:var(--ink-soft); font-size:14.5px; line-height:1.9; margin:0 0 8px; }
+  .question-row{ max-width:520px; margin:14px auto 4px; }
+  .question-row label{ display:block; font-size:13px; letter-spacing:.3em; color:var(--ink-faint); margin-bottom:6px; text-align:center; }
+  .question-row input{
+    width:100%; min-height:48px; padding:10px 14px;
+    font-family:inherit; font-size:16px; text-align:center;
+    color:var(--ink); background:transparent;
+    border:none; border-bottom:1px solid var(--card-edge);
+    outline:none;
+  }
+  .question-row input:focus{ border-bottom-color:var(--cinnabar); }
+
+  .btn{
+    display:inline-block; min-height:52px; padding:12px 38px;
+    font-family:inherit; font-size:18px; font-weight:600; letter-spacing:.3em; text-indent:.3em;
+    color:#f8ecd4; background:linear-gradient(160deg, var(--cinnabar-bright), var(--cinnabar) 60%, #8e2318);
+    border:1px solid rgba(0,0,0,.15); border-radius:3px;
+    cursor:pointer; box-shadow:0 5px 16px rgba(120,30,18,.3);
+  }
+  .btn:active{ transform:translateY(1px); }
+  .btn:disabled{ opacity:.45; cursor:default; box-shadow:none; }
+  .btn.ghost{
+    color:var(--ink-soft); background:transparent; box-shadow:none;
+    border:1px solid var(--card-edge); font-size:15px; min-height:44px; padding:8px 22px;
+  }
+  .btn-row{ text-align:center; margin-top:20px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+
+  /* ---------- 铜钱 ---------- */
+  .coins{ display:flex; gap:20px; justify-content:center; margin:26px 0 6px; min-height:86px; }
+  .coin{
+    width:82px; height:82px; border-radius:50%;
+    background:radial-gradient(circle at 35% 32%, #e6c87e, var(--brass) 55%, var(--brass-dark));
+    box-shadow:0 6px 14px rgba(90,66,20,.35), inset 0 0 0 3px rgba(125,95,36,.55), inset 0 2px 5px rgba(255,240,200,.6);
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .coin::after{
+    content:""; width:26px; height:26px;
+    background:var(--card);
+    border:2px solid rgba(125,95,36,.7);
+    box-shadow:inset 0 1px 3px rgba(90,66,20,.35);
+  }
+  .coin .face{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:"Ma Shan Zheng",serif; font-size:19px; color:#5f4712;
+  }
+  .coin .face span{ position:absolute; }
+  .coin .face .t{ top:5px; } .coin .face .b{ bottom:5px; }
+  .coin .face .l{ left:7px; } .coin .face .r{ right:7px; }
+  .coin.back .face{ display:none; }
+  .coin.back::before{
+    content:""; position:absolute; inset:14px; border-radius:50%;
+    border:2px dashed rgba(125,95,36,.65);
+  }
+  .coin.tossing{ animation:flip .18s linear infinite; }
+  @keyframes flip{ from{ transform:rotateY(0) translateY(0);} 50%{ transform:rotateY(90deg) translateY(-14px);} to{ transform:rotateY(180deg) translateY(0);} }
+  @media (prefers-reduced-motion: reduce){ .coin.tossing{ animation:none; } }
+  .toss-status{ text-align:center; color:var(--ink-soft); font-size:15px; min-height:24px; margin-top:10px; letter-spacing:.08em; }
+  .toss-status b{ color:var(--cinnabar); font-weight:600; }
+
+  /* ---------- 卦象 ---------- */
+  .hex-stage{ display:flex; gap:34px; justify-content:center; align-items:flex-start; flex-wrap:wrap; margin-top:18px; }
+  .hex-figure{ text-align:center; min-width:170px; }
+  .hex-figure .cap{ font-size:13px; letter-spacing:.4em; text-indent:.4em; color:var(--ink-faint); margin-bottom:10px; }
+  .lines{ display:flex; flex-direction:column-reverse; gap:9px; align-items:center; min-height:150px; justify-content:flex-start; }
+  .yao{ display:flex; align-items:center; gap:10px; height:17px; }
+  .yao .bar{ height:13px; background:var(--ink); border-radius:1px; }
+  .yao.yang .bar{ width:118px; }
+  .yao.yin{ gap:0; }
+  .yao.yin .bar{ width:52px; }
+  .yao.yin .gap{ width:14px; }
+  .yao .mark{ width:20px; font-size:16px; color:var(--cinnabar); font-weight:900; text-align:left; }
+  .yao.fresh{ animation:yaoIn .4s ease; }
+  @keyframes yaoIn{ from{ opacity:0; transform:scaleX(.4);} to{ opacity:1; transform:none;} }
+  .yao .pos{ width:20px; font-size:12px; color:var(--ink-faint); text-align:right; }
+
+  .result{ margin-top:26px; display:none; }
+  .result.show{ display:block; animation:fadein .5s ease; }
+  .result-head{ text-align:center; }
+  .result-head .hex-name{
+    font-family:"Ma Shan Zheng",serif; font-size:46px; letter-spacing:.1em; margin:0; color:var(--ink);
+  }
+  .result-head .hex-full{ color:var(--ink-soft); letter-spacing:.35em; text-indent:.35em; font-size:15px; margin-top:2px; }
+  .result-head .hex-num{ color:var(--ink-faint); font-size:13px; letter-spacing:.2em; margin-top:4px; }
+  .gua-ci{
+    margin:20px auto 0; max-width:600px; text-align:center;
+    font-size:19px; line-height:2; font-weight:600;
+    padding:16px 18px;
+    background:var(--cinnabar-soft);
+    border-top:1px solid var(--cinnabar);
+    border-bottom:1px solid var(--cinnabar);
+  }
+  .gua-ci .lbl{ display:block; font-size:12.5px; letter-spacing:.5em; text-indent:.5em; color:var(--cinnabar); font-weight:600; margin-bottom:4px; }
+  .jie{ max-width:640px; margin:18px auto 0; font-size:16px; line-height:2.05; color:var(--ink); text-align:justify; }
+  .jie .lbl{ color:var(--gold); font-weight:900; letter-spacing:.2em; }
+  .changed-note{ text-align:center; color:var(--ink-soft); font-size:14.5px; margin-top:14px; line-height:1.9; }
+  .changed-note b{ color:var(--cinnabar); }
+
+  /* ---------- 签筒 ---------- */
+  .tube-stage{ display:flex; flex-direction:column; align-items:center; margin-top:10px; }
+  .tube{
+    width:120px; height:170px; margin-top:64px;
+    background:linear-gradient(90deg, #6d4c22, #96692f 30%, #b5853f 50%, #96692f 72%, #5f3f1c);
+    border-radius:10px 10px 16px 16px;
+    position:relative;
+    box-shadow:0 12px 24px rgba(80,55,15,.35), inset 0 -14px 22px rgba(0,0,0,.28);
+  }
+  .tube::before{
+    content:""; position:absolute; left:0; right:0; top:16px; height:10px;
+    background:rgba(60,38,10,.45);
+  }
+  .tube::after{
+    content:"签"; position:absolute; left:50%; top:52%; transform:translate(-50%,-50%);
+    font-family:"Ma Shan Zheng",serif; font-size:44px; color:rgba(248,236,212,.9);
+    text-shadow:0 1px 3px rgba(0,0,0,.4);
+  }
+  .tube .sticks{ position:absolute; left:50%; bottom:100%; transform:translateX(-50%); width:96px; height:66px; }
+  .stick-in{
+    position:absolute; bottom:0; width:11px; height:66px;
+    background:linear-gradient(180deg, #d9b878, #c4a05c);
+    border-radius:5px 5px 0 0;
+    box-shadow:inset 0 0 0 1px rgba(120,90,35,.4);
+  }
+  .tube.shaking{ animation:shake .12s linear infinite; }
+  @keyframes shake{ 0%{ transform:rotate(-3.4deg) translateX(-2px);} 50%{ transform:rotate(3.4deg) translateX(2px);} 100%{ transform:rotate(-3.4deg) translateX(-2px);} }
+  @media (prefers-reduced-motion: reduce){ .tube.shaking{ animation:none; } }
+  .lot-slip{
+    display:none; margin:30px auto 0; max-width:480px; text-align:center;
+    background:linear-gradient(180deg, #fbf5e4, var(--card));
+    border:1px solid var(--card-edge);
+    border-top:6px solid var(--cinnabar);
+    padding:24px 22px 26px;
+    box-shadow:var(--shadow);
+  }
+  @media (prefers-color-scheme: dark){ .lot-slip{ background:linear-gradient(180deg, #2c2619, var(--card)); } }
+  .lot-slip.show{ display:block; animation:slipOut .55s ease; }
+  @keyframes slipOut{ from{ opacity:0; transform:translateY(-16px);} to{ opacity:1; transform:none;} }
+  .lot-slip .lot-no{ font-size:13px; letter-spacing:.45em; text-indent:.45em; color:var(--ink-faint); }
+  .lot-slip .lot-grade{
+    display:inline-block; margin-top:10px; padding:3px 16px;
+    font-size:15px; font-weight:900; letter-spacing:.35em; text-indent:.35em;
+    color:#f8ecd4; background:var(--cinnabar); border-radius:2px;
+  }
+  .lot-slip .poem{
+    margin:18px 0 4px;
+    font-family:"Zhi Mang Xing","Ma Shan Zheng",serif;
+    font-size:clamp(22px, 5.6vw, 27px); line-height:1.95; letter-spacing:.06em; color:var(--ink);
+  }
+  .lot-slip .jie-text{ margin-top:14px; font-size:15.5px; line-height:2; text-align:justify; color:var(--ink); }
+  .lot-slip .jie-text .lbl{ color:var(--gold); font-weight:900; letter-spacing:.2em; }
+
+  /* ---------- 今日运势 ---------- */
+  .fortune-date{ text-align:center; margin-bottom:4px; }
+  .fortune-date .solar{ font-size:16px; letter-spacing:.15em; }
+  .fortune-date .lunar{ color:var(--cinnabar); font-weight:600; letter-spacing:.25em; margin-top:4px; font-size:15px; }
+  .fortune-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; max-width:620px; margin:22px auto 0; }
+  @media (max-width:520px){ .fortune-grid{ grid-template-columns:1fr; } }
+  .f-item{ border:1px solid var(--card-edge); padding:14px 18px; background:var(--gold-soft); border-radius:3px; }
+  .f-item .f-name{ font-size:13px; letter-spacing:.4em; color:var(--ink-soft); }
+  .f-item .f-val{ font-size:19px; font-weight:900; margin-top:5px; }
+  .f-item .stars{ color:var(--cinnabar); font-size:16px; letter-spacing:.18em; margin-top:2px; }
+  .yiji{ display:flex; gap:14px; max-width:620px; margin:14px auto 0; flex-wrap:wrap; }
+  .yiji .box{ flex:1 1 240px; padding:16px 20px; border-radius:3px; }
+  .yiji .yi{ background:var(--cinnabar-soft); border:1px solid var(--cinnabar); }
+  .yiji .ji{ background:transparent; border:1px solid var(--card-edge); }
+  .yiji .box .t{ font-family:"Ma Shan Zheng",serif; font-size:24px; }
+  .yiji .yi .t{ color:var(--cinnabar); }
+  .yiji .box .items{ margin-top:6px; font-size:16.5px; letter-spacing:.12em; line-height:1.9; }
+  .daily-hex{ text-align:center; margin-top:24px; }
+  .daily-hex .cap{ font-size:13px; letter-spacing:.4em; text-indent:.4em; color:var(--ink-faint); }
+  .daily-hex .name{ font-family:"Ma Shan Zheng",serif; font-size:34px; margin-top:4px; }
+  .daily-hex .word{ max-width:560px; margin:8px auto 0; color:var(--ink-soft); line-height:2; font-size:15.5px; }
+  .daily-hex .lines{ min-height:0; margin-top:12px; }
+  .daily-hex .yao.yang .bar{ width:84px; }
+  .daily-hex .yao.yin .bar{ width:36px; }
+
+  footer{ text-align:center; margin-top:44px; }
+  footer .foot-rule{ max-width:420px; margin:0 auto 22px; height:1px; background:linear-gradient(90deg, transparent, var(--gold), transparent); }
+  footer .foot-note{ color:var(--ink-faint); font-size:13px; letter-spacing:.2em; margin-top:18px; line-height:2; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <a class="tarot-btn" href="https://jinghanz-808.github.io/tarot-reading/" target="_blank" rel="noopener"><span class="dot"></span>去看看塔罗占卜</a>
+  </div>
+
+  <header class="hero">
+    <div class="seal">卜</div>
+    <h1>中式占卜</h1>
+    <p class="sub">周易起卦 · 灵签问卜 · 今日运势</p>
+    <div class="rule"><span></span></div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab-btn active" data-tab="zhouyi" role="tab">周易占卜</button>
+    <button class="tab-btn" data-tab="chouqian" role="tab">抽 签</button>
+    <button class="tab-btn" data-tab="yunshi" role="tab">今日运势</button>
+  </nav>
+
+  <!-- ============ 周易占卜 ============ -->
+  <section class="panel active" id="panel-zhouyi">
+    <div class="card">
+      <h2>铜钱起卦</h2>
+      <p class="hint">静心默念所问之事，抛掷铜钱六次，自下而上成卦。<br />三枚铜钱：字为二、背为三。三字为老阴（六），三背为老阳（九），皆为变爻。</p>
+      <div class="question-row">
+        <label for="question">所 问 之 事</label>
+        <input id="question" type="text" placeholder="例如：近来事业顺遂否？" autocomplete="off" />
+      </div>
+
+      <div class="coins" id="coins">
+        <div class="coin"><div class="face"><span class="t">乾</span><span class="b">隆</span><span class="l">通</span><span class="r">宝</span></div></div>
+        <div class="coin"><div class="face"><span class="t">乾</span><span class="b">隆</span><span class="l">通</span><span class="r">宝</span></div></div>
+        <div class="coin"><div class="face"><span class="t">乾</span><span class="b">隆</span><span class="l">通</span><span class="r">宝</span></div></div>
+      </div>
+      <p class="toss-status" id="tossStatus">尚未起卦 · 请抛掷第一次</p>
+
+      <div class="btn-row">
+        <button class="btn" id="tossBtn">抛掷铜钱</button>
+        <button class="btn ghost" id="autoBtn">一键起卦</button>
+        <button class="btn ghost" id="resetBtn">重新起卦</button>
+      </div>
+
+      <div class="hex-stage" id="hexStage" style="display:none">
+        <div class="hex-figure">
+          <div class="cap">本 卦</div>
+          <div class="lines" id="benLines"></div>
+        </div>
+        <div class="hex-figure" id="bianFigure" style="display:none">
+          <div class="cap">变 卦</div>
+          <div class="lines" id="bianLines"></div>
+        </div>
+      </div>
+
+      <div class="result" id="zhouyiResult">
+        <div class="result-head">
+          <p class="hex-name" id="hexName"></p>
+          <p class="hex-full" id="hexFull"></p>
+          <p class="hex-num" id="hexNum"></p>
+        </div>
+        <div class="gua-ci"><span class="lbl">卦 辞</span><span id="guaCi"></span></div>
+        <p class="jie"><span class="lbl">解卦 · </span><span id="hexJie"></span></p>
+        <p class="changed-note" id="changedNote"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 抽签 ============ -->
+  <section class="panel" id="panel-chouqian">
+    <div class="card">
+      <h2>求签问卜</h2>
+      <p class="hint">心诚则灵。默念所问之事，摇动签筒，签落自有天意。</p>
+      <div class="question-row">
+        <label for="lotQuestion">所 问 之 事</label>
+        <input id="lotQuestion" type="text" placeholder="例如：此行远游可顺遂否？" autocomplete="off" />
+      </div>
+
+      <div class="tube-stage">
+        <div class="tube" id="tube">
+          <div class="sticks" id="sticks"></div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn" id="drawBtn">摇 签</button>
+      </div>
+
+      <div class="lot-slip" id="lotSlip">
+        <div class="lot-no" id="lotNo"></div>
+        <div><span class="lot-grade" id="lotGrade"></span></div>
+        <p class="poem" id="lotPoem"></p>
+        <p class="jie-text"><span class="lbl">解签 · </span><span id="lotJie"></span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 今日运势 ============ -->
+  <section class="panel" id="panel-yunshi">
+    <div class="card">
+      <h2>今日运势</h2>
+      <div class="fortune-date">
+        <div class="solar" id="solarDate"></div>
+        <div class="lunar" id="lunarDate"></div>
+      </div>
+
+      <div class="fortune-grid" id="fortuneGrid"></div>
+
+      <div class="yiji">
+        <div class="box yi"><div class="t">宜</div><div class="items" id="yiItems"></div></div>
+        <div class="box ji"><div class="t">忌</div><div class="items" id="jiItems"></div></div>
+      </div>
+
+      <div class="fortune-grid" id="luckyGrid"></div>
+
+      <div class="daily-hex">
+        <div class="cap">今 日 一 卦</div>
+        <div class="name" id="dailyHexName"></div>
+        <div class="lines" id="dailyHexLines"></div>
+        <p class="word" id="dailyHexWord"></p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot-rule"></div>
+    <a class="tarot-btn" href="https://jinghanz-808.github.io/tarot-reading/" target="_blank" rel="noopener"><span class="dot"></span>去看看塔罗占卜</a>
+    <p class="foot-note">占卜之说，聊供参酌 · 吉凶在人，不在卦签</p>
+  </footer>
+</div>
+
+<script>
+/* ================= 八卦与六十四卦数据 ================= */
+var TRI = { /* 自下而上三爻，1为阳，0为阴 */
+  "乾":[1,1,1], "兑":[1,1,0], "离":[1,0,1], "震":[1,0,0],
+  "巽":[0,1,1], "坎":[0,1,0], "艮":[0,0,1], "坤":[0,0,0]
+};
+/* [卦名, 上卦, 下卦, 卦辞, 白话解读] */
+var HEX = [
+["乾","乾","乾","元亨，利贞。","天行健，君子以自强不息。此卦阳气正盛，时机大好，宜积极进取、放手作为。只是盛极易衰，越是顺遂越要戒骄戒躁，守正则吉。"],
+["坤","坤","坤","元亨，利牝马之贞。君子有攸往，先迷后得主，利。西南得朋，东北丧朋。安贞吉。","地势坤，君子以厚德载物。此卦宜守不宜攻，宜柔不宜刚。包容、顺势、踏实积累，自有贵人相助；强出头反而迷失方向。"],
+["屯","坎","震","元亨，利贞。勿用有攸往，利建侯。","万事开头难，如种子破土、云雷交作。眼下虽艰难，却满含生机。宜稳扎稳打，不宜远行冒进；找对帮手、分步推进，局面自会打开。"],
+["蒙","艮","坎","亨。匪我求童蒙，童蒙求我。初筮告，再三渎，渎则不告。利贞。","如孩童待启蒙，心中有惑未解。此卦提醒：虚心求教胜过自作聪明。把问题想清楚再行动，诚心请教师长前辈，迷津自破。"],
+["需","坎","乾","有孚，光亨，贞吉。利涉大川。","需者，等待也。时机未到，云聚天上而雨未落。宜耐心守候、养精蓄锐，饮食宴乐以安其心。贸然强行反招阻碍，等得起，方成事。"],
+["讼","乾","坎","有孚，窒惕，中吉，终凶。利见大人，不利涉大川。","争讼之象，天与水违行。此卦主口舌是非，宜退让和解、见好就收。若执意争到底，纵赢亦伤。得贵人调停则吉，切忌意气用事。"],
+["师","坤","坎","贞，丈人吉，无咎。","师者，众也。如军队出征，贵在纪律与统帅。做事要有章法、有主心骨，选对带头人、定好规矩再行动，则无往不利；乌合之众必败。"],
+["比","坎","坤","吉。原筮，元永贞，无咎。不宁方来，后夫凶。","比者，亲附和合。水行地上，润物无声。此卦宜亲近贤者、团结众人，合作胜过单打独斗。但脚步要快，迟疑观望者反落人后。"],
+["小畜","巽","乾","亨。密云不雨，自我西郊。","积蓄尚小，密云满天却不下雨。力量与时机都还差一口气，宜小步积累、涵养实力，不宜急于求成。云已聚，雨只是迟早之事。"],
+["履","乾","兑","履虎尾，不咥人，亨。","如踩虎尾，处境看似凶险。此卦提醒：守礼、谨慎、言行有度，便能化险为夷。以柔顺之道行于险地，不逞强、不逾矩，自得平安。"],
+["泰","坤","乾","小往大来，吉，亨。","天地交泰，阴阳通畅，万事亨通。此卦为顺遂之象，上下同心、内外畅达，宜把握时机、大展拳脚。只是泰极防否，顺境中也要留一分居安思危。"],
+["否","乾","坤","否之匪人，不利君子贞，大往小来。","天地不交，闭塞不通。此卦时运低迷，沟通受阻、小人当道。宜守不宜进，收敛锋芒、保存实力，静待否极泰来，不必强求于此时。"],
+["同人","乾","离","同人于野，亨。利涉大川，利君子贞。","与人同心，其利断金。此卦宜开诚布公、广结善缘，把心思摆到明处来谈。集体的力量远胜个人，志同道合者可共渡难关。"],
+["大有","离","乾","元亨。","火在天上，光明普照，丰收富足之象。收获颇丰、人气正旺，宜乘势而为。只是富而好礼方长久，忌恃才傲物、独享其成。"],
+["谦","坤","艮","亨，君子有终。","山藏于地，谦谦君子。此卦大吉在谦：越是低调自牧、礼让待人，越得敬重与助力。有本事而不自夸，事事皆能善始善终。"],
+["豫","震","坤","利建侯，行师。","雷出地奋，万物和乐。此卦主顺势而动、未雨绸缪。气氛和悦、人心可用，宜趁势布局；但欢乐之中不可懈怠，豫必有备。"],
+["随","兑","震","元亨，利贞，无咎。","随者，顺随也。泽中有雷，随时而动。此卦宜顺应时势、随和待人，不可固执己见。该跟随大势时便跟随，灵活变通则无咎。"],
+["蛊","艮","巽","元亨，利涉大川。先甲三日，后甲三日。","蛊者，积弊也。问题积累已久，如器皿生虫，非整治不可。此卦虽辛苦，却是拨乱反正、重获新生的契机。谋划在先，善后在后，大胆动手。"],
+["临","坤","兑","元亨，利贞。至于八月有凶。","君临天下，居高临下，运势正上升。此卦宜亲力亲为、主动靠近机会与人群。只是盛时有限，好光景要早作打算，不可得意忘形。"],
+["观","巽","坤","盥而不荐，有孚颙若。","风行地上，无所不至。此卦主观望审视：多看、多思、以身作则，比轻举妄动更重要。把局势看透了，心中有数了，再出手不迟。"],
+["噬嗑","离","震","亨。利用狱。","口中有物，须咬断方能合。此卦主障碍当前，须明辨是非、果断处理，该立规矩时立规矩，该下决心时莫犹豫，拖延只会让小梗变成大塞。"],
+["贲","艮","离","亨。小利有攸往。","贲者，文饰也。适度修饰能增色，形象与礼数不可废。但此卦提醒：不可只重表面而忘根本，本末倒置，则小利而已，大事难成。"],
+["剥","艮","坤","不利有攸往。","山附于地，剥落衰败之象。时运低迷、根基松动，此卦宜静守退避，不宜有任何冒进之举。保存实力，等待一阳来复，自有转机。"],
+["复","坤","震","亨。出入无疾，朋来无咎。反复其道，七日来复，利有攸往。","一阳来复，否极泰来。转机已经出现，如冬至阳生。此卦宜顺势重启、回归正道，但脚步要稳，不可操之过急，老朋友、老路子皆可再用。"],
+["无妄","乾","震","元亨，利贞。其匪正有眚，不利有攸往。","无妄者，不妄为也。守正道、去侥幸，脚踏实地自然亨通。若心存投机、行不由正，反招意外之灾。此卦最忌自作聪明。"],
+["大畜","艮","乾","利贞。不家食吉，利涉大川。","天在山中，厚积薄发。此卦宜积累学识、资源与人脉，把功夫下在平时。蓄势已足之时，自可大有作为，眼下多学多攒，胜过急于表现。"],
+["颐","艮","震","贞吉。观颐，自求口实。","颐者，养也。此卦关乎养生与养德：注意饮食起居，慎言慎行，自食其力。看一个人如何自养、养人，便知其吉凶。守正则吉。"],
+["大过","兑","巽","栋桡，利有攸往，亨。","栋梁弯曲，压力过重，非常之时也。此卦主担子过重、局面失衡，需用非常手段调整。但要量力而行，先卸下不必要的负担，方能有攸往。"],
+["坎","坎","坎","习坎，有孚，维心亨，行有尚。","重重险阻，水洊至习。此卦处境艰难，坑洼接连。唯有以诚信与坚韧涉险，心不乱、行不止，终能出险。切忌自暴自弃、铤而走险。"],
+["离","离","离","利贞，亨。畜牝牛，吉。","离者，明也，丽也。火焰须依附柴薪方能长明。此卦宜找对依靠、守住光明磊落，柔顺中正自得其吉。切忌孤高自燃、无所依凭。"],
+["咸","兑","艮","亨，利贞。取女吉。","咸者，感也。山上有泽，感应交心。此卦主情感与人际：真诚最能打动人，以心换心则无事不成。虚情假意者，感而不应。"],
+["恒","震","巽","亨，无咎，利贞，利有攸往。","恒者，久也。雷风相与，长久之道。此卦宜持之以恒、守常守正，最忌朝三暮四、半途而废。认定的方向，坚持到底则无咎。"],
+["遁","乾","艮","亨，小利贞。","天下有山，遁也。此卦主退避：形势不利时，退一步不是怯懦，而是智慧。功成身退、明哲保身，小事尚可为，大事莫强求。"],
+["大壮","震","乾","利贞。","雷在天上，声势壮盛。力量虽强，更须守礼守正。此卦最忌恃强妄动：如公羊以角触篱，进退两难。声势要配得上分寸，方为真壮。"],
+["晋","离","坤","康侯用锡马蕃庶，昼日三接。","明出地上，旭日东升，晋升之象。才华得展、贵人青睐，宜乘势而上、主动表现。此卦为进取之吉卦，但晋升之时更要谦和待下。"],
+["明夷","坤","离","利艰贞。","明入地中，光明受伤。此卦身处逆境，锋芒易遭忌，宜韬光养晦、内守光明。艰难之中守住本心，不必急于证明自己，黎明自会到来。"],
+["家人","巽","离","利女贞。","风自火出，家人之道。此卦主内务与根基：先齐家、后行事，内部和睦是一切的根本。言要有物、行要有恒，家里稳了，外面的事自然顺。"],
+["睽","离","兑","小事吉。","火泽睽，意见相背、志向各异。此卦大事难成，小事可为。与人相处宜求同存异、把分歧摆明，误会多源于不说，沟通到位则小事皆吉。"],
+["蹇","坎","艮","利西南，不利东北。利见大人，贞吉。","山高水深，举步维艰。此卦前有险阻，硬闯无益，宜停下另寻出路，或绕道而行。此时最宜求助贵人，得指点则可化蹇为通。"],
+["解","震","坎","利西南，无所往，其来复吉。有攸往，夙吉。","雷雨作而百果草木皆甲坼，困局解除，雨过天晴。此卦宜趁势了结旧事、化解积怨，不宜拖延留尾巴。无事时早归静养，有事时速战速决。"],
+["损","艮","兑","有孚，元吉，无咎，可贞。利有攸往。曷之用？二簋可用享。","损下益上，有所舍方有所得。此卦眼前吃亏未必是祸：减损浮华、节制欲望、真诚待人，则元吉无咎。诚意不在多少，二簋薄祭，神亦享之。"],
+["益","巽","震","利有攸往，利涉大川。","风雷交助，增益之象。得助、得利、得势之时，宜见善则迁、利人利己。此卦贵在行动：机会窗口正开，犹豫则风过无痕。"],
+["夬","兑","乾","扬于王庭，孚号，有厉。告自邑，不利即戎，利有攸往。","决也，当断则断。此卦主果断处置积弊：当断不断，反受其乱。但决断须光明正大、先礼后兵，过激与暗算皆招厉，靠实力与道理服人方吉。"],
+["姤","乾","巽","女壮，勿用取女。","天下有风，不期而遇。此卦主邂逅：新机会、新缘分忽然而至，但来者底细未明，宜多留心、慢下定论。一阴初生，也提醒防微杜渐，小事莫纵容。"],
+["萃","兑","坤","亨。王假有庙，利见大人，亨，利贞。用大牲吉，利有攸往。","泽上于地，聚集荟萃。人气、资源正在汇聚，宜凝聚人心、主持大局。人多之处也须防患未然，备好规矩与后手，聚而不乱则亨。"],
+["升","坤","巽","元亨。用见大人，勿恤。南征吉。","地中生木，步步高升。此卦主顺势上升、积小成大，如幼苗破土终成大树。宜主动拜见贵人、争取机会，进取之心不必忧虑，南征则吉。"],
+["困","兑","坎","亨，贞，大人吉，无咎。有言不信。","泽无水，困也。此卦身处困境：资源匮乏、言语难取信于人。君子困而不失其志，与其多费口舌，不如以行动证明自己。熬过去，自有亨通。"],
+["井","坎","巽","改邑不改井，无丧无得。往来井井，汔至亦未繘井，羸其瓶，凶。","井养不穷，德泽长流。此卦主守根本、惠他人：城邑可改，井不可迁。把分内之事做到长久可靠，便是最大的福分。切忌半途而废，功亏一篑。"],
+["革","兑","离","己日乃孚，元亨，利贞，悔亡。","泽中有火，变革之时。此卦主革新：时机成熟、人心思变之时方可动手，顺应人心、师出有名则悔亡。操之过急或师出无名，皆难成事。"],
+["鼎","离","巽","元吉，亨。","木上有火，鼎新稳重。鼎者，定也、新也。此卦主开创新局、调和鼎鼐，宜稳重行事、广纳贤才。根基打牢、新局立稳，自有元吉大亨。"],
+["震","震","震","亨。震来虩虩，笑言哑哑。震惊百里，不丧匕鬯。","重雷交作，震动之象。突如其来的变故令人心惊，但此卦惊而不乱者吉：临危不惧、守住本分，雷声过后自有笑言。慌乱失措，方为真凶。"],
+["艮","艮","艮","艮其背，不获其身。行其庭，不见其人，无咎。","兼山，艮也。止也。此卦主适可而止：该停则停、知止不殆。静思反省胜过盲目前行，不该管的事不管，不该说的话不说，则无咎。"],
+["渐","巽","艮","女归吉，利贞。","山上有木，渐也。如鸿雁飞行有序，此卦主循序渐进：凡事按部就班、一步一个脚印，急进反坏事。次序对了，慢亦是快，终得其吉。"],
+["归妹","震","兑","征凶，无攸利。","泽上有雷，归妹之象。此卦主次序不当、勉强成事：位置未正、条件未足而急于求成，多半无利。宜认清自己的位置，先正名分，再谈进取。"],
+["丰","震","离","亨。王假之，勿忧，宜日中。","雷电皆至，丰盛隆大。如日中天、声势全盛之时，宜把握当下、全力施为。只是丰极防衰，盛时多留后路，勿忧而有备则吉。"],
+["旅","离","艮","小亨，旅贞吉。","山上有火，羁旅在外。此卦身处异乡或新环境，根基未稳，宜谦和谨慎、小心安顿，不宜大张旗鼓。待人以礼、行事低调，则小亨而吉。"],
+["巽","巽","巽","小亨，利有攸往，利见大人。","随风，巽也。风无孔不入，此卦主顺势而入：宜柔顺谦逊、见机行事，以柔克刚。姿态放低、号令申明，自可深入人心，无往不利。"],
+["兑","兑","兑","亨，利贞。","丽泽，兑也。喜悦和悦之象。以和悦待人则人心悦服，朋友讲习、互通有无。此卦忌悦之过度与谄媚讨好：真诚的喜悦通达，虚伪的逢迎招损。"],
+["涣","巽","坎","亨。王假有庙，利涉大川，利贞。","风行水上，涣散之象。人心离散之时，先散后聚：宜化解隔阂、凝聚人心，把散掉的力量重新拢回来。诚意所至，可涉险成功。"],
+["节","坎","兑","亨。苦节不可贞。","泽上有水，节制有度。此卦主分寸：凡事有节则亨，开源节流、张弛有度。但节不可过苦，过度约束反生怨，恰到好处方为真节。"],
+["中孚","巽","兑","豚鱼吉，利涉大川，利贞。","泽上有风，诚信感孚。此卦以诚为本：心怀诚信可感化万物，连豚鱼亦为之动。宜以信立身、以诚待人，则涉险亦吉，守正则通。"],
+["小过","震","艮","亨，利贞。可小事，不可大事。飞鸟遗之音，不宜上，宜下，大吉。","山上有雷，小有过越。此卦宜做小事、守细节，姿态宜低不宜高，如飞鸟向下则吉。好高骛远谋大事则凶，把小事做扎实，自有大吉。"],
+["既济","坎","离","亨，小，利贞。初吉，终乱。","水在火上，事已成矣。此卦成功在望或已成，但成事之际最易松懈生乱。宜守成防变、慎终如始，初吉终乱的教训，全在尾巴上。"],
+["未济","离","坎","亨。小狐汔济，濡其尾，无攸利。","火在水上，事未成也。小狐将渡而湿其尾：离成功尚差一步，最忌临门松劲。此卦曙光在前，宜慎终如始、辨清方向，全力以赴走完最后一程。"]
+];
+var HEX_BY_KEY = {};
+HEX.forEach(function(h, i){
+  var lines = TRI[h[2]].concat(TRI[h[1]]);
+  HEX_BY_KEY[lines.join("")] = { idx:i, name:h[0], up:h[1], low:h[2], ci:h[3], jie:h[4], lines:lines };
+});
+var TRINAME = { "乾":"天", "坤":"地", "震":"雷", "巽":"风", "坎":"水", "离":"火", "艮":"山", "兑":"泽" };
+function fullName(h){
+  if(h.up === h.low) return h.name + "为" + TRINAME[h.up];
+  return TRINAME[h.up] + TRINAME[h.low] + h.name;
+}
+
+/* ================= 签文库 ================= */
+/* [签号, 等级, 签诗四句, 解签] */
+var LOTS = [
+[1,"上上签","开天辟地万象新，良辰吉日福临门；若问前程何所似，青云直上步蟾宫。","万事亨通，如日初升。所谋皆顺，所求皆得，正是大展宏图之时。唯宜心存正直，福泽方能长久。"],
+[2,"中平签","鲲鲸未变守江滨，不可升腾离碧津；异日峥嵘身变化，许君一跃跳龙门。","时机未至，如鲲潜深水。眼下宜守不宜动，安心积累，他日风云际会，自有一跃龙门之时。急躁冒进，反误前程。"],
+[3,"上吉签","春风得意马蹄疾，万里山河入眼来；若得贵人提携处，平步青云指日开。","春风得意，贵人临门。所问之事多有助力，宜主动争取、把握良机。得意之时不忘提携他人，福分更厚。"],
+[4,"中平签","云横秦岭家何在，雪拥蓝关马不前；且坐静思当日事，待时方许出重关。","前路受阻，如云横秦岭。不是无路，而是时候未到。宜停步整顿、静思得失，待云开雪化，自然通途。"],
+[5,"下下签","阴霾蔽日雾重重，行路崎岖步步空；劝君回首寻归径，莫向悬崖险处冲。","运势低迷，诸事不宜冒进。所问之事多有暗阻，宜及时止步、回头是岸。守旧安分，静待天时，切莫孤注一掷。"],
+[6,"上上签","紫气东来满户庭，祥光瑞霭绕门楣；家宅安然人康健，财源滚滚自天齐。","紫气东来，满门祥瑞。家宅平安，财源广进，所谋之事无不顺遂。宜珍惜福气，广结善缘。"],
+[7,"中吉签","耕耘自有秋收日，不用扬鞭自奋蹄；但把心田勤灌溉，瓜熟蒂落水渠成。","一分耕耘，一分收获。此签不主侥幸，主勤勉：把该做的事做到位，结果自然水到渠成，不必催促。"],
+[8,"中平签","月在天心水在瓶，世间万事有亏盈；劝君莫作机心想，进退荣枯听天命。","月满则亏，水满则溢。此签劝人放平心机，进退之间自有定数。强求不得时，不如随缘安分，反得清净自在。"],
+[9,"上吉签","宝剑锋从磨砺出，梅花香自苦寒来；君今历尽千般苦，终有扬眉吐气时。","苦尽甘来。过往的磨砺不会白费，转机就在眼前。宜再坚持一程，扬眉之日不远，切莫在黎明前放弃。"],
+[10,"中平签","舟行江上遇风波，幸有篙师力挽河；若问平安何日到，风平浪静自然过。","行程有惊无险。途中虽有风波，但自有助力化险为夷。宜谨慎驾驶、不可大意，风浪过后即是坦途。"],
+[11,"下下签","镜里花容留不住，水中明月捞成空；劝君莫作痴心想，脚踏实地始为功。","所求之事如镜花水月，多半成空。此签提醒：放下不切实际的妄想，回到脚踏实地处，方有真实收获。"],
+[12,"上吉签","金鳞岂是池中物，一遇风云便化龙；君今得此风云会，前程万里任翱翔。","风云际会，化龙在即。才华与时机同时到位，宜果断出手、大展身手。只须记住：得势之时，更要行事光明。"],
+[13,"中平签","采菊东篱下，悠然见南山；世人皆逐利，君独守清闲。","此签主守拙安闲。众人争抢之处，未必有你的福分；退一步守住本心，反得悠然。此问之事，宜静不宜争。"],
+[14,"中吉签","柳暗花明又一村，山重水复疑无路；莫愁前路无知己，天下谁人不识君。","绝处逢生。看似无路之处，转角自有新村。宜坚持向前，不必忧愁孤单，知音与贵人都在前路上等着。"],
+[15,"上上签","旭日东升照九洲，百花竞放满园秋；君问前程归何处，康庄大道任遨游。","旭日东升，万象更新。前程如康庄大道，畅通无阻。宜趁此良机放手作为，所行皆顺，所至皆宜。"],
+[16,"中平签","守株待兔非良策，缘木求鱼枉费心；方法不对空劳力，回头方是上云梯。","方向错了，努力白费。此签提醒及时调整方法与目标，不必在一棵树上吊死。回头换路，反是捷径。"],
+[17,"下下签","秋风落叶满长安，独上高楼望不还；世事沧桑多变幻，且将浊酒慰心寒。","时运不济，孤寂难行。所问之事多有波折，宜收敛锋芒、安顿身心，不宜做重大决定。静待来年春风。"],
+[18,"上吉签","和气春风满面生，逢人作事自通成；更兼贵客相扶助，家业田园渐渐兴。","和气生财，逢人通成。此签主以和为贵：态度和善、处事圆融，自然贵人相助，家业渐兴。切忌意气之争。"],
+[19,"中平签","一轮明月照江湖，万里清光不受拘；若问浮生何所似，随缘到处是吾庐。","随缘自在之象。此签不主大起大落，主心安：所问之事顺其自然便好，强求反生烦恼，到处心安即是家。"],
+[20,"中吉签","磨杵成针非一日，绳锯木断水穿石；君心若有恒常在，何愁大事不能集。","恒心制胜。事情进展虽慢，但方向无误。宜持之以恒、不可半途而废，水滴石穿之日，大事可成。"],
+[21,"上上签","凤凰台上凤凰游，一举冲霄万里秋；若问功名何日就，蟾宫折桂在今朝。","功名在望，一举成名。此签大吉：所问功名、考试、晋升之事，皆有喜讯。宜临门果断，全力以赴。"],
+[22,"中平签","江上渔翁披蓑笠，潮来潮去任沉浮；不求闻达于诸侯，但愿平安度春秋。","平安是福。此签主安守本分：不求显达，但求无事。所问之事以稳为上，不宜贪大求全，平安即是收获。"],
+[23,"下签","逆水行舟用力撑，一篙松劲退千寻；劝君莫作逞强想，暂避风头再启程。","逆水行舟，进难退易。此签主阻力重重，硬撑无益。宜暂避锋芒、保存实力，待顺风之时再启程不迟。"],
+[24,"上吉签","春回大地万物苏，枯木逢春再发株；君今若得东风助，旧业新枝一样殊。","枯木逢春，否极泰来。沉寂已久之事将有转机，旧业亦可翻出新篇。宜借东风之势，主动重启，不可再蹉跎。"]
+];
+
+/* ================= 标签切换 ================= */
+var tabBtns = document.querySelectorAll(".tab-btn");
+tabBtns.forEach(function(b){
+  b.addEventListener("click", function(){
+    tabBtns.forEach(function(x){ x.classList.remove("active"); });
+    b.classList.add("active");
+    document.querySelectorAll(".panel").forEach(function(p){ p.classList.remove("active"); });
+    document.getElementById("panel-" + b.getAttribute("data-tab")).classList.add("active");
+  });
+});
+
+/* ================= 周易：铜钱起卦 ================= */
+var POSNAME = ["初爻","二爻","三爻","四爻","五爻","上爻"];
+var tossLines = []; /* 每项 {yang:bool, changing:bool, sum:number} */
+var tossing = false;
+var coinEls = document.querySelectorAll("#coins .coin");
+var tossBtn = document.getElementById("tossBtn");
+var tossStatus = document.getElementById("tossStatus");
+
+function renderLines(el, lines, showMark){
+  el.innerHTML = "";
+  lines.forEach(function(ln, i){
+    var row = document.createElement("div");
+    row.className = "yao " + (ln.yang ? "yang" : "yin");
+    var pos = document.createElement("span"); pos.className = "pos"; pos.textContent = POSNAME[i].charAt(0);
+    row.appendChild(pos);
+    if(ln.yang){
+      var b1 = document.createElement("span"); b1.className = "bar"; row.appendChild(b1);
+    } else {
+      var s1 = document.createElement("span"); s1.className = "bar"; row.appendChild(s1);
+      var g = document.createElement("span"); g.className = "gap"; row.appendChild(g);
+      var s2 = document.createElement("span"); s2.className = "bar"; row.appendChild(s2);
+    }
+    var mk = document.createElement("span"); mk.className = "mark";
+    mk.textContent = (showMark && ln.changing) ? (ln.yang ? "○" : "×") : "";
+    row.appendChild(mk);
+    el.appendChild(row);
+  });
+}
+
+function doToss(){
+  if(tossing || tossLines.length >= 6) return;
+  tossing = true;
+  tossBtn.disabled = true;
+  document.getElementById("zhouyiResult").classList.remove("show");
+  coinEls.forEach(function(c){ c.classList.add("tossing"); });
+  tossStatus.innerHTML = "铜钱翻转中……";
+  var results = [];
+  for(var i = 0; i < 3; i++) results.push(Math.random() < 0.5 ? 2 : 3); /* 字=2，背=3 */
+  setTimeout(function(){
+    coinEls.forEach(function(c, i){
+      c.classList.remove("tossing");
+      c.classList.toggle("back", results[i] === 3);
+    });
+    var sum = results[0] + results[1] + results[2];
+    var ln = { yang: (sum === 7 || sum === 9), changing: (sum === 6 || sum === 9), sum: sum };
+    tossLines.push(ln);
+    var names = {6:"老阴（变爻）",7:"少阳",8:"少阴",9:"老阳（变爻）"};
+    var coinText = results.map(function(r){ return r === 2 ? "字" : "背"; }).join(" · ");
+    document.getElementById("hexStage").style.display = "flex";
+    renderLines(document.getElementById("benLines"), tossLines, true);
+    var n = tossLines.length;
+    if(n < 6){
+      tossStatus.innerHTML = "第" + "一二三四五六"[n-1] + "掷：" + coinText + "，得 <b>" + names[sum] + "</b> · 已成 " + n + " 爻，请抛掷第" + "一二三四五六"[n] + "次";
+    } else {
+      tossStatus.innerHTML = "六爻已成：" + coinText + "，得 <b>" + names[sum] + "</b>";
+      finishHexagram();
+    }
+    tossing = false;
+    tossBtn.disabled = tossLines.length >= 6;
+    if(tossLines.length >= 6) tossBtn.textContent = "六 爻 已 成";
+  }, 850);
+}
+
+function finishHexagram(){
+  var bits = tossLines.map(function(l){ return l.yang ? 1 : 0; });
+  var ben = HEX_BY_KEY[bits.join("")];
+  var hasChange = tossLines.some(function(l){ return l.changing; });
+  document.getElementById("hexName").textContent = ben.name + "卦";
+  document.getElementById("hexFull").textContent = fullName(ben);
+  document.getElementById("hexNum").textContent = "六十四卦 · 第" + (ben.idx + 1) + "卦";
+  document.getElementById("guaCi").textContent = ben.ci;
+  var q = document.getElementById("question").value.trim();
+  document.getElementById("hexJie").textContent = (q ? "所问「" + q + "」。 " : "") + ben.jie;
+  var note = document.getElementById("changedNote");
+  var bianFig = document.getElementById("bianFigure");
+  if(hasChange){
+    var bianBits = tossLines.map(function(l){ return l.changing ? (l.yang ? 0 : 1) : (l.yang ? 1 : 0); });
+    var bianLines = bianBits.map(function(b){ return { yang: b === 1, changing:false }; });
+    var bian = HEX_BY_KEY[bianBits.join("")];
+    bianFig.style.display = "block";
+    renderLines(document.getElementById("bianLines"), bianLines, false);
+    var changedPos = [];
+    tossLines.forEach(function(l, i){ if(l.changing) changedPos.push(POSNAME[i]); });
+    note.innerHTML = "变爻在<b>" + changedPos.join("、") + "</b>，本卦变为<b>" + fullName(bian) + "</b>（第" + (bian.idx + 1) + "卦）。<br />变卦所示为事态后续走向：" + bian.jie;
+  } else {
+    bianFig.style.display = "none";
+    note.textContent = "此卦无变爻，卦象稳定，以本卦卦辞断之。";
+  }
+  document.getElementById("zhouyiResult").classList.add("show");
+}
+
+function resetZhouyi(){
+  tossLines = [];
+  tossing = false;
+  tossBtn.disabled = false;
+  tossBtn.textContent = "抛掷铜钱";
+  coinEls.forEach(function(c){ c.classList.remove("back", "tossing"); });
+  document.getElementById("hexStage").style.display = "none";
+  document.getElementById("zhouyiResult").classList.remove("show");
+  tossStatus.textContent = "尚未起卦 · 请抛掷第一次";
+}
+
+tossBtn.addEventListener("click", doToss);
+document.getElementById("autoBtn").addEventListener("click", function(){
+  resetZhouyi();
+  var count = 0;
+  var timer = setInterval(function(){
+    if(count >= 6){ clearInterval(timer); return; }
+    if(!tossing){ doToss(); count++; }
+  }, 950);
+});
+document.getElementById("resetBtn").addEventListener("click", resetZhouyi);
+
+/* ================= 抽签 ================= */
+var sticksBox = document.getElementById("sticks");
+for(var s = 0; s < 7; s++){
+  var st = document.createElement("div");
+  st.className = "stick-in";
+  st.style.left = (6 + s * 13) + "px";
+  st.style.height = (52 + (s % 3) * 9) + "px";
+  st.style.transform = "rotate(" + ((s - 3) * 3.5) + "deg)";
+  st.style.transformOrigin = "bottom center";
+  sticksBox.appendChild(st);
+}
+var drawing = false;
+document.getElementById("drawBtn").addEventListener("click", function(){
+  if(drawing) return;
+  drawing = true;
+  var tube = document.getElementById("tube");
+  var slip = document.getElementById("lotSlip");
+  slip.classList.remove("show");
+  tube.classList.add("shaking");
+  this.disabled = true;
+  var btn = this;
+  setTimeout(function(){
+    tube.classList.remove("shaking");
+    var lot = LOTS[Math.floor(Math.random() * LOTS.length)];
+    document.getElementById("lotNo").textContent = "第 " + lot[0] + " 签";
+    document.getElementById("lotGrade").textContent = lot[1];
+    document.getElementById("lotPoem").innerHTML = lot[2].split("；").join("；<br />");
+    var q = document.getElementById("lotQuestion").value.trim();
+    document.getElementById("lotJie").textContent = (q ? "所问「" + q + "」。 " : "") + lot[3];
+    slip.classList.add("show");
+    btn.disabled = false;
+    btn.textContent = "再 摇 一 签";
+    drawing = false;
+  }, 1400);
+});
+
+/* ================= 今日运势 ================= */
+function seedRand(seed){
+  var t = seed;
+  return function(){
+    t |= 0; t = t + 0x6D2B79F5 | 0;
+    var r = Math.imul(t ^ t >>> 15, 1 | t);
+    r = r + Math.imul(r ^ r >>> 7, 61 | r) ^ r;
+    return ((r ^ r >>> 14) >>> 0) / 4294967296;
+  };
+}
+function stars(score){ /* score 1..5 */
+  var s = "";
+  for(var i = 0; i < 5; i++) s += (i < score ? "★" : "☆");
+  return s;
+}
+(function fortune(){
+  var now = new Date();
+  var y = now.getFullYear(), m = now.getMonth() + 1, d = now.getDate();
+  var week = "日一二三四五六"[now.getDay()];
+  document.getElementById("solarDate").textContent = y + " 年 " + m + " 月 " + d + " 日 · 星期" + week;
+  try {
+    var lunar = new Intl.DateTimeFormat("zh-Hans-CN-u-ca-chinese", { month:"long", day:"numeric" }).format(now);
+    var ly = new Intl.DateTimeFormat("zh-Hans-CN-u-ca-chinese", { year:"numeric" }).format(now);
+    document.getElementById("lunarDate").textContent = "农历 " + ly.replace(/年$/, "") + "年 " + lunar;
+  } catch(e) {
+    document.getElementById("lunarDate").textContent = "";
+  }
+  var seed = y * 10000 + m * 100 + d;
+  var rnd = seedRand(seed);
+  function pick(arr, n){
+    var copy = arr.slice(), out = [];
+    for(var i = 0; i < n && copy.length; i++){
+      out.push(copy.splice(Math.floor(rnd() * copy.length), 1)[0]);
+    }
+    return out;
+  }
+  var dims = [
+    ["事业运", ["宜稳扎稳打，忌锋芒太露", "贵人运佳，宜主动争取", "平顺无波，守成即可", "有新机遇，宜果断出手", "宜低调行事，先做后说"]],
+    ["财运", ["正财稳进，偏财莫贪", "有意外之喜，宜见好就收", "宜节流，忌冲动消费", "投资运佳，仍须谨慎", "财来财去，守财为上"]],
+    ["感情运", ["桃花初绽，宜真诚以待", "宜多陪伴，忌冷言冷语", "平平淡淡，细水长流", "有心动信号，宜主动一步", "宜包容，莫翻旧账"]],
+    ["健康运", ["精神饱满，宜动不宜静", "注意作息，忌熬夜", "宜清淡饮食，多饮水", "小恙无碍，心情为要", "宜舒展筋骨，忌久坐"]]
+  ];
+  var grid = document.getElementById("fortuneGrid");
+  dims.forEach(function(dim){
+    var sc = 2 + Math.floor(rnd() * 4); /* 2..5 */
+    var word = dim[1][Math.floor(rnd() * dim[1].length)];
+    var div = document.createElement("div"); div.className = "f-item";
+    div.innerHTML = '<div class="f-name">' + dim[0] + '</div><div class="stars">' + stars(sc) + '</div><div class="f-val" style="font-size:15.5px;font-weight:400;line-height:1.8">' + word + '</div>';
+    grid.appendChild(div);
+  });
+  var YI = ["祭祀","出行","会友","求财","开市","读书","整理书房","栽种","沐浴","作灶","纳采","移徙","安床","祈福","求医","扫舍","习艺","结网","理发","裁衣"];
+  var JI = ["争讼","远行","动土","借贷","开仓","置产","嫁娶","安葬","破土","词讼","开渠","伐木","上梁","分居","出货","酗酒","熬夜","冲动消费","签约","探病"];
+  document.getElementById("yiItems").textContent = pick(YI, 5).join(" · ");
+  document.getElementById("jiItems").textContent = pick(JI, 5).join(" · ");
+
+  var colors = ["玄青","月白","竹青","黛蓝","朱红","鹅黄","藕荷","墨绿","赭石","霜灰","绛紫","天青"];
+  var dirs = ["正东","东南","正南","西南","正西","西北","正北","东北"];
+  var shichen = ["子时（23–1时）","丑时（1–3时）","寅时（3–5时）","卯时（5–7时）","辰时（7–9时）","巳时（9–11时）","午时（11–13时）","未时（13–15时）","申时（15–17时）","酉时（17–19时）","戌时（19–21时）","亥时（21–23时）"];
+  var lucky = [
+    ["幸运颜色", colors[Math.floor(rnd() * colors.length)]],
+    ["幸运数字", String(1 + Math.floor(rnd() * 9))],
+    ["今日吉方", dirs[Math.floor(rnd() * dirs.length)]],
+    ["今日吉时", shichen[Math.floor(rnd() * shichen.length)]]
+  ];
+  var lg = document.getElementById("luckyGrid");
+  lucky.forEach(function(it){
+    var div = document.createElement("div"); div.className = "f-item";
+    div.innerHTML = '<div class="f-name">' + it[0] + '</div><div class="f-val">' + it[1] + '</div>';
+    lg.appendChild(div);
+  });
+
+  var dh = HEX[Math.floor(rnd() * 64)];
+  var dhlines = TRI[dh[2]].concat(TRI[dh[1]]);
+  document.getElementById("dailyHexName").textContent = fullName({ name: dh[0], up: dh[1], low: dh[2] }) + " · " + dh[0] + "卦";
+  renderLines(document.getElementById("dailyHexLines"), dhlines.map(function(b){ return { yang: b === 1, changing: false }; }), false);
+  document.getElementById("dailyHexWord").textContent = dh[4];
+})();
+</script>
+</body>
+</html>
